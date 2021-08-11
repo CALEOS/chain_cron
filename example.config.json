@@ -1,0 +1,10 @@
+{
+  "mainnet": {
+    "nodeUrl": "https://telos.caleos.io",
+    "keys": ["5.."]
+  },
+  "testnet": {
+    "nodeUrl": "https://testnet.telos.caleos.io",
+    "keys": ["5.."]
+  }
+}
