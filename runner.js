@@ -16,15 +16,15 @@ const mainnetRpc = new JsonRpc(config.mainnet.nodeUrl, { fetch })
 const testnetRpc = new JsonRpc(config.testnet.nodeUrl, { fetch })
 
 const mainnet = new Api({
-    mainnetRpc,
-    mainnetSignatureProvider,
+    rpc: mainnetRpc,
+    signatureProvider: mainnetSignatureProvider,
     textDecoder: new util.TextDecoder(),
     textEncoder: new util.TextEncoder()
 });
 
 const testnet = new Api({
-    testnetRpc,
-    testnetSignatureProvider,
+    rpc: testnetRpc,
+    signatureProvider: testnetSignatureProvider,
     textDecoder: new util.TextDecoder(),
     textEncoder: new util.TextEncoder()
 });
@@ -33,27 +33,29 @@ const testnet = new Api({
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function random(min, max) {
-  return Math.floor(
-    Math.random() * (max - min) + min
-  )
+    return Math.floor(
+        Math.random() * (max - min) + min
+    )
 }
 
 
 (async (mainnet, testnet) => {
-  console.log("MAINNET=======");
-  api = mainnet;
-  await doMechanics();
+    while (true) {
+        console.log("MAINNET=======");
+        api = mainnet;
+        await doMechanics();
 
-  console.log("TESTNET=======");
-  api = testnet;
-  await doMechanics();
+        console.log("TESTNET=======");
+        api = testnet;
+        await doMechanics();
+        await sleep(random(40000, 60000));
+    }
 })(mainnet, testnet)
 
 
 async function doMechanics() {
-    //await sleep(random(1000, 30000));
     console.log("sending CPU eosmechanics");
-    await sendActions([{
+    const result = await sendActions([{
         account: 'eosmechanics',
         name: 'cpu',
         authorization: [{
@@ -67,7 +69,7 @@ async function doMechanics() {
 
 async function sendActions(actions) {
     try {
-        const result = await api.transact({ actions: actions }, { blocksBehind: 3, expireSeconds: 30 });
+        return await api.transact({ actions: actions }, { blocksBehind: 3, expireSeconds: 30 });
     } catch (e) {
         console.log(e);
     }
