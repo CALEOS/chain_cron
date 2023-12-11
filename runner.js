@@ -83,10 +83,10 @@ async function doEosioPay() {
     console.log("sent eosio::pay");
 }
 
-async function sendActions(actions) {
+async function sendActions(actions, catchError) {
     try {
         return await api.transact({ actions: actions }, { blocksBehind: 3, expireSeconds: 30 });
     } catch (e) {
-        console.log(e);
+        console.log(e.message);
     }
 }
