@@ -44,10 +44,12 @@ function random(min, max) {
         console.log("MAINNET=======");
         api = mainnet;
         await doMechanics();
+        await doEosioPay();
 
         console.log("TESTNET=======");
         api = testnet;
         await doMechanics();
+        await doEosioPay();
         await sleep(random(40000, 60000));
     }
 })(mainnet, testnet)
@@ -65,6 +67,20 @@ async function doMechanics() {
         data: {}
     }])
     console.log("sent CPU eosmechanics");
+}
+
+async function doEosioPay() {
+    console.log("sending eosio::pay");
+    const result = await sendActions([{
+        account: 'eosio',
+        name: 'pay',
+        authorization: [{
+            actor: 'eosmechanics',
+            permission: 'active',
+        }],
+        data: {}
+    }])
+    console.log("sent eosio::pay");
 }
 
 async function sendActions(actions) {
